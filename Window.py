@@ -13,8 +13,10 @@ class Window(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.setMouseTracking(True)
+
         # setting title
-        self.setWindowTitle("Python ")
+        self.setWindowTitle("Tic-Tac-Toe")
 
         # setting geometry
         self.setGeometry(100, 100,
@@ -57,9 +59,11 @@ class Window(QMainWindow):
                 self.push_list[i][j].setGeometry(x * i + 20,
                                                  y * j + 20,
                                                  80, 80)
-
                 # setting font to the button
-                self.push_list[i][j].setFont(QFont(QFont('Times', 17)))
+                self.push_list[i][j].setFont(QFont(QFont('Times', 40)))
+                QFont.bold(self.push_list[i][j].font())
+
+                self.push_list[i][j].setMouseTracking(True)
 
                 # adding action
                 self.push_list[i][j].clicked.connect(self.action_called)
@@ -73,7 +77,7 @@ class Window(QMainWindow):
         # setting style sheet to the label
         self.label.setStyleSheet("QLabel"
                                  "{"
-                                 "border : 3px solid black;"
+                                 "border : 1px solid black;"
                                  "background : white;"
                                  "}")
 
@@ -190,3 +194,17 @@ class Window(QMainWindow):
 
         # if nothing is crossed
         return False
+
+    def mouseMoveEvent(self, event):
+        for i in range(3):
+            for j in range(3):
+                if self.push_list[i][j].underMouse():
+                    if self.turn == 1:
+                        self.push_list[i][j].setText("O")
+                    else:
+                        self.push_list[i][j].setText("X")
+                else:
+                    if self.push_list[i][j].isEnabled():
+                        self.push_list[i][j].setText("")
+
+
