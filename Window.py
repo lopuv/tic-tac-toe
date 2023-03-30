@@ -4,6 +4,8 @@ from PyQt6 import QtCore, QtGui
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 
+from pydexarm import Dexarm
+
 import sys
 
 
@@ -12,6 +14,16 @@ class Window(QMainWindow):
     # constructor
     def __init__(self):
         super().__init__()
+
+        self.arm = Dexarm("COM3")
+
+        self.Circlefunctions = [self.arm.cirkelA1(), self.arm.cirkelA2(), self.arm.cirkelA3(),
+                                self.arm.cirkelB1(), self.arm.cirkelB2(), self.arm.cirkelB3(),
+                                self.arm.cirkelC1(), self.arm.cirkelC2(), self.arm.cirkelC3()]
+
+        self.Crossfunctions = [self.arm.crossA1(), self.arm.crossA2(), self.arm.crossA3(),
+                               self.arm.cirkelB1(), self.arm.cirkelB2(), self.arm.crossB3(),
+                               self.arm.cirkelC1(), self.arm.cirkelC2(), self.arm.cirkelC3()]
 
         self.setMouseTracking(True)
 
@@ -66,7 +78,7 @@ class Window(QMainWindow):
                 self.push_list[i][j].setMouseTracking(True)
 
                 # adding action
-                self.push_list[i][j].clicked.connect(self.action_called)
+                self.push_list[i][j].clicked.connect(self.action_called(i + j))
 
         # creating label to tel the score
         self.label = QLabel(self)
@@ -96,7 +108,6 @@ class Window(QMainWindow):
         # adding action action to the reset push button
         reset_game.clicked.connect(self.reset_game_action)
 
-
     # method called by reset button
     def reset_game_action(self):
 
@@ -116,7 +127,7 @@ class Window(QMainWindow):
                 button.setText("")
 
     # action called by the push buttons
-    def action_called(self):
+    def action_called(self, num):
 
         self.times += 1
 
@@ -129,9 +140,11 @@ class Window(QMainWindow):
         # checking the turn
         if self.turn == 0:
             button.setText("X")
+            self.Crossfunctions[num]
             self.turn = 1
         else:
             button.setText("O")
+            self.Circlefunctions[num]
             self.turn = 0
 
         # call the winner checker method
@@ -206,5 +219,3 @@ class Window(QMainWindow):
                 else:
                     if self.push_list[i][j].isEnabled():
                         self.push_list[i][j].setText("")
-
-
